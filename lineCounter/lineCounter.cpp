@@ -20,14 +20,31 @@ bool find(std::string origin,std::string f)
     return false;
 }
 
-int main()
+int main(int argc, char* argv[])// Syntax ./ lineCounter -.h -.c -.cpp
 {
     std::fstream fileStream;
     std::string path = "./";
-    std::vector<std::string> fileTypes = { ".cpp", ".h", ".hpp", ".c" };
+    std::vector<std::string> fileTypes;
     std::vector<std::string> paths;
     std::vector<std::string> validPaths;
     std::string tempBuf; // literally not required
+    if(argc < 0)
+    {
+        for (auto i = 0; i < argc; i++)
+        {
+            std::string conversion(argv[i]);
+            std::string strBuf;
+            if (conversion[0] != '-')
+                std::cout << "Invalid argument type!" << " Argument: " << i << std::endl;
+            for (auto c : conversion)
+            {
+                if (c == '-')
+                    continue;
+                strBuf += c;
+            }
+            fileTypes.push_back(strBuf);
+        }
+    }
     int linecount = 0;
     for (auto file : std::filesystem::directory_iterator(path))
         paths.push_back(file.path().filename().string());
@@ -49,11 +66,7 @@ int main()
         while (std::getline(fileStream, tempBuf))
             linecount++;
         fileStream.close();
-
     }
-    
     std::cout << "Lines of code: " << linecount << std::endl;
-    std::string x;
-    std::cin >> x;
     return 0;
 }
